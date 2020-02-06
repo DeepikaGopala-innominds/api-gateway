@@ -1,0 +1,60 @@
+http:
+  port: 8083
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  api:
+    host: localhost
+    paths: '/ip'
+  projects:
+      host: localhost
+      paths: '/api/projects/*'
+  # vendor:
+  #     host: localhost
+  #     paths: '/api/vendor'
+serviceEndpoints:
+  httpbin:
+    url: 'https://httpbin.org'
+  projectsrv:
+    url: 'http://localhost:3000'
+  vendorsrv:
+    url: 'http://127.0.0.1:4000/'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - api
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin 
+              changeOrigin: true
+  default1:
+    apiEndpoints:
+      - projects
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: projectsrv 
+  # default2:
+  #   apiEndpoints:
+  #     - vendor
+  #   policies:
+  #   # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+  #   # - key-auth:
+  #     - proxy:
+  #         - action:
+  #             serviceEndpoint: vendorsrv 
